@@ -13,7 +13,24 @@ interface HeroSectionProps {
   breakingNews?: Article[]
 }
 
+function getValidImageUrl(url?: string) {
+  if (!url) return '/placeholder.jpg'
+  if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('/')) return url
+  return '/placeholder.jpg'
+}
+
 export function HeroSection({ featuredArticles, breakingNews }: HeroSectionProps) {
+  if (!featuredArticles || featuredArticles.length === 0) {
+    return (
+      <section className="py-8 bg-gradient-to-b from-background-50 to-background">
+        <div className="container-custom text-center py-16">
+          <h2 className="text-2xl font-bold text-primary mb-4">No featured articles available</h2>
+          <p className="text-gray-600">Check back soon for the latest top stories.</p>
+        </div>
+      </section>
+    )
+  }
+
   const mainArticle = featuredArticles[0]
   const secondaryArticles = featuredArticles.slice(1, 4)
 
@@ -59,11 +76,12 @@ export function HeroSection({ featuredArticles, breakingNews }: HeroSectionProps
             <Link href={`/article/${mainArticle.slug}`}>
               <article className="group relative h-96 lg:h-[500px] rounded-xl overflow-hidden cursor-pointer">
                 <Image
-                  src={mainArticle.featured_image}
+                  src={getValidImageUrl(mainArticle.featured_image)}
                   alt={mainArticle.title}
                   fill
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                   sizes="(max-width: 768px) 100vw, 66vw"
+                  priority
                 />
                 
                 {/* Gradient Overlay */}
@@ -125,7 +143,7 @@ export function HeroSection({ featuredArticles, breakingNews }: HeroSectionProps
                       {/* Image */}
                       <div className="relative w-24 h-24 flex-shrink-0">
                         <Image
-                          src={article.featured_image}
+                          src={getValidImageUrl(article.featured_image)}
                           alt={article.title}
                           fill
                           className="object-cover"

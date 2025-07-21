@@ -14,6 +14,13 @@ interface ArticleCardProps {
   className?: string
 }
 
+function getValidImageUrl(url?: string) {
+  if (!url) return '/placeholder.jpg'
+  if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('/')) return url
+  // If not valid, use placeholder
+  return '/placeholder.jpg'
+}
+
 export function ArticleCard({ article, variant = 'default', className }: ArticleCardProps) {
   const isFeatured = variant === 'featured'
   const isCompact = variant === 'compact'
@@ -44,11 +51,12 @@ export function ArticleCard({ article, variant = 'default', className }: Article
             ${isFeatured ? 'aspect-[16/9]' : isCompact ? 'aspect-[4/3]' : 'aspect-[3/2]'}
           `}>
             <Image
-              src={article.featured_image}
+              src={getValidImageUrl(article.featured_image)}
               alt={article.title}
               fill
               className="object-cover transition-transform duration-300 group-hover:scale-105"
               sizes={isFeatured ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"}
+              priority={isFeatured}
             />
             
             {/* Category Badge */}
