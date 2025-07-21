@@ -3,8 +3,13 @@ import { notFound } from 'next/navigation'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { ArticleCard } from '@/components/articles/article-card'
-import { Calendar, MapPin, Globe, Twitter, Linkedin } from 'lucide-react'
 import { Article, Author } from '@/types'
+
+function getValidImageUrl(url?: string) {
+  if (!url) return '/placeholder.jpg'
+  if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('/')) return url
+  return '/placeholder.jpg'
+}
 
 async function getAuthor(slug: string): Promise<Author | null> {
   try {
@@ -83,7 +88,7 @@ export default async function AuthorPage({ params }: { params: { slug: string } 
               <div className="flex-shrink-0">
                 {author.avatar ? (
                   <img
-                    src={author.avatar}
+                    src={getValidImageUrl(author.avatar)}
                     alt={author.name}
                     className="w-32 h-32 rounded-full object-cover border-4 border-accent"
                   />
@@ -99,62 +104,23 @@ export default async function AuthorPage({ params }: { params: { slug: string } 
                 <h1 className="text-3xl lg:text-4xl font-bold text-primary mb-4">
                   {author.name}
                 </h1>
-                
-                {author.title && (
-                  <p className="text-xl text-accent font-semibold mb-4">
-                    {author.title}
-                  </p>
-                )}
-
                 {author.bio && (
                   <p className="text-gray-600 text-lg leading-relaxed mb-6">
                     {author.bio}
                   </p>
                 )}
-
-                {/* Author Details */}
                 <div className="flex flex-wrap gap-6 text-gray-600">
-                  {author.location && (
+                  {author.email && (
                     <div className="flex items-center gap-2">
-                      <MapPin className="w-4 h-4" />
-                      <span>{author.location}</span>
+                      <span className="font-semibold">Email:</span>
+                      <span>{author.email}</span>
                     </div>
                   )}
-                  
-                  {author.website && (
-                    <a
-                      href={author.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-accent hover:text-accent/80 transition-colors"
-                    >
-                      <Globe className="w-4 h-4" />
-                      <span>Website</span>
-                    </a>
-                  )}
-                  
-                  {author.twitter && (
-                    <a
-                      href={`https://twitter.com/${author.twitter}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-accent hover:text-accent/80 transition-colors"
-                    >
-                      <Twitter className="w-4 h-4" />
-                      <span>@{author.twitter}</span>
-                    </a>
-                  )}
-                  
-                  {author.linkedin && (
-                    <a
-                      href={author.linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-accent hover:text-accent/80 transition-colors"
-                    >
-                      <Linkedin className="w-4 h-4" />
-                      <span>LinkedIn</span>
-                    </a>
+                  {author.twitter_handle && (
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold">Twitter:</span>
+                      <span>@{author.twitter_handle}</span>
+                    </div>
                   )}
                 </div>
               </div>

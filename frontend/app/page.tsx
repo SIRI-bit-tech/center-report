@@ -36,7 +36,8 @@ async function getCategories() {
       throw new Error('Failed to fetch categories')
     }
     
-    return await response.json()
+    const data = await response.json()
+    return data.results || data
   } catch (error) {
     console.error('Error fetching categories:', error)
     return []
