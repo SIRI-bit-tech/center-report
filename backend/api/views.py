@@ -18,9 +18,7 @@ from .pagination import CustomPagination
 
 
 class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Category.objects.filter(is_active=True).annotate(
-        article_count=Count('articles', filter=Q(articles__status='published'))
-    )
+    queryset = Category.objects.filter(is_active=True)
     serializer_class = CategorySerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
     pagination_class = CustomPagination

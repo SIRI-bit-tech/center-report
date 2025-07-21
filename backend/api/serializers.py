@@ -19,7 +19,7 @@ class AuthorSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Author
-        fields = ['id', 'name', 'bio', 'avatar', 'email', 'twitter_handle', 'linkedin_url', 'website', 'is_active', 'article_count', 'created_at']
+        fields = ['id', 'name', 'bio', 'avatar', 'email', 'twitter_handle', 'is_active', 'article_count', 'created_at']
 
     def get_article_count(self, obj):
         return obj.articles.filter(status='published').count()

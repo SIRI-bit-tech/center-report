@@ -5,7 +5,9 @@ from django.contrib.auth.models import User
 from taggit.managers import TaggableManager
 from ckeditor.fields import RichTextField
 from cloudinary.models import CloudinaryField
+from django.conf import settings
 
+CLOUDINARY_BASE_URL = 'https://res.cloudinary.com/your-cloud-name/'  # Replace with your real cloud name
 
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -36,7 +38,6 @@ class Category(models.Model):
     def article_count(self):
         return self.articles.filter(status='published').count()
 
-
 class Author(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=200)
@@ -44,8 +45,6 @@ class Author(models.Model):
     avatar = CloudinaryField('avatar', blank=True, null=True)
     email = models.EmailField()
     twitter_handle = models.CharField(max_length=50, blank=True)
-    linkedin_url = models.URLField(blank=True)
-    website = models.URLField(blank=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -63,6 +62,12 @@ class Author(models.Model):
     def article_count(self):
         return self.articles.filter(status='published').count()
 
+    def save(self, *args, **kwargs):
+        # Ensure avatar is a full URL
+        if self.avatar and isinstance(self.avatar, str) and not (self.avatar.startswith('http://') or self.avatar.startswith('https://')):
+            if self.avatar.startswith('image/upload/'):
+                self.avatar = CLOUDINARY_BASE_URL + self.avatar
+        super().save(*args, **kwargs)
 
 class Article(models.Model):
     STATUS_CHOICES = [
@@ -108,6 +113,10 @@ class Article(models.Model):
             self.meta_title = self.title[:60]
         if not self.meta_description:
             self.meta_description = self.excerpt[:160]
+        # Ensure featured_image is a full URL
+        if self.featured_image and isinstance(self.featured_image, str) and not (self.featured_image.startswith('http://') or self.featured_image.startswith('https://')):
+            if self.featured_image.startswith('image/upload/'):
+                self.featured_image = CLOUDINARY_BASE_URL + self.featured_image
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
@@ -124,7 +133,6 @@ class Article(models.Model):
         self.views_count += 1
         self.save(update_fields=['views_count'])
 
-
 class Newsletter(models.Model):
     email = models.EmailField(unique=True)
     is_active = models.BooleanField(default=True)
@@ -136,7 +144,6 @@ class Newsletter(models.Model):
 
     def __str__(self):
         return self.email
-
 
 class Contact(models.Model):
     SUBJECT_CHOICES = [
