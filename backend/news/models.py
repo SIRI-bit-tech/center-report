@@ -9,6 +9,15 @@ from django.conf import settings
 
 CLOUDINARY_BASE_URL = 'https://res.cloudinary.com/your-cloud-name/'  # Replace with your real cloud name
 
+def ensure_full_cloudinary_url(url):
+    if not url:
+        return ''
+    if url.startswith('http://') or url.startswith('https://'):
+        return url
+    if url.startswith('image/upload/'):
+        return CLOUDINARY_BASE_URL + url
+    return url
+
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=100, unique=True)
@@ -64,9 +73,8 @@ class Author(models.Model):
 
     def save(self, *args, **kwargs):
         # Ensure avatar is a full URL
-        if self.avatar and isinstance(self.avatar, str) and not (self.avatar.startswith('http://') or self.avatar.startswith('https://')):
-            if self.avatar.startswith('image/upload/'):
-                self.avatar = CLOUDINARY_BASE_URL + self.avatar
+        if self.avatar:
+            self.avatar = ensure_full_cloudinary_url(str(self.avatar))
         super().save(*args, **kwargs)
 
 class Article(models.Model):
@@ -114,9 +122,8 @@ class Article(models.Model):
         if not self.meta_description:
             self.meta_description = self.excerpt[:160]
         # Ensure featured_image is a full URL
-        if self.featured_image and isinstance(self.featured_image, str) and not (self.featured_image.startswith('http://') or self.featured_image.startswith('https://')):
-            if self.featured_image.startswith('image/upload/'):
-                self.featured_image = CLOUDINARY_BASE_URL + self.featured_image
+        if self.featured_image:
+            self.featured_image = ensure_full_cloudinary_url(str(self.featured_image))
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):

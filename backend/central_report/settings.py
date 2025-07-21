@@ -4,7 +4,11 @@ Django settings for central_report project.
 
 import os
 from pathlib import Path
-from decouple import config
+try:
+    from decouple import config
+except ImportError:
+    config = lambda key, default=None, cast=None: os.environ.get(key, default)
+    # Optionally add type casting if needed
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -208,11 +212,20 @@ EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 
 # Cloudinary Configuration (for image uploads)
-CLOUDINARY = {
-    'cloud_name': config('CLOUDINARY_CLOUD_NAME', default=''),
-    'api_key': config('CLOUDINARY_API_KEY', default=''),
-    'api_secret': config('CLOUDINARY_API_SECRET', default=''),
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': config('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': config('CLOUDINARY_API_KEY'),
+    'API_SECRET': config('CLOUDINARY_API_SECRET'),
 }
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+# Also set legacy config for cloudinary (not just cloudinary_storage)
+import cloudinary
+cloudinary.config(
+    cloud_name=config('CLOUDINARY_CLOUD_NAME'),
+    api_key=config('CLOUDINARY_API_KEY'),
+    api_secret=config('CLOUDINARY_API_SECRET'),
+)
 
 # Security Settings (for production)
 if not DEBUG:
