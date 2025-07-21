@@ -7,21 +7,14 @@ from .models import Category, Author, Article, Newsletter, Contact
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ['name', 'slug', 'color_display', 'order', 'is_active', 'article_count']
+    list_display = ['name', 'slug', 'color', 'order', 'is_active', 'article_count']
     list_filter = ['is_active', 'created_at']
     search_fields = ['name', 'description']
     prepopulated_fields = {'slug': ('name',)}
     ordering = ['order', 'name']
     
-    def color_display(self, obj):
-        return format_html(
-            '<span style="background-color: {}; color: white; padding: 2px 8px; border-radius: 4px;">{}</span>',
-            obj.color, obj.color
-        )
-    color_display.short_description = 'Color'
-    
     def article_count(self, obj):
-        return obj.articles.count()
+        return obj.articles.filter(status='published').count()
     article_count.short_description = 'Articles'
 
 
@@ -33,13 +26,16 @@ class AuthorAdmin(admin.ModelAdmin):
     readonly_fields = ['created_at', 'updated_at']
     
     def avatar_display(self, obj):
-        if obj.avatar:
-            return format_html('<img src="{}" width="50" height="50" style="border-radius: 50%;" />', obj.avatar.url)
+        try:
+            if obj.avatar and hasattr(obj.avatar, 'url'):
+                return format_html('<img src="{}" width="50" height="50" style="border-radius: 50%;" />', obj.avatar.url)
+        except Exception:
+            pass
         return "No Avatar"
     avatar_display.short_description = 'Avatar'
     
     def article_count(self, obj):
-        return obj.articles.count()
+        return obj.articles.filter(status='published').count()
     article_count.short_description = 'Articles'
 
 
