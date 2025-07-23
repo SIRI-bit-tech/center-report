@@ -15,37 +15,69 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class AuthorSerializer(serializers.ModelSerializer):
-    article_count = serializers.SerializerMethodField()
-    
+    avatar = serializers.SerializerMethodField()
+
     class Meta:
         model = Author
-        fields = ['id', 'name', 'bio', 'avatar', 'email', 'twitter_handle', 'is_active', 'article_count', 'created_at']
+        fields = ['id', 'name', 'bio', 'avatar', 'twitter_handle', 'is_active']
 
-    def get_article_count(self, obj):
-        return obj.articles.filter(status='published').count()
+    def get_avatar(self, obj):
+        request = self.context.get('request')
+        if obj.avatar:
+            url = str(obj.avatar)
+            if url.startswith('http'):
+                return url
+            if request:
+                return request.build_absolute_uri(obj.avatar.url)
+            return obj.avatar.url
+        return None
 
 
 class ArticleListSerializer(serializers.ModelSerializer):
     author = AuthorSerializer(read_only=True)
     category = CategorySerializer(read_only=True)
+    featured_image = serializers.SerializerMethodField()
     tags = TagListSerializerField()
-    
+
     class Meta:
         model = Article
         fields = ['id', 'title', 'slug', 'excerpt', 'featured_image', 'author', 'category', 'tags', 
                  'is_featured', 'is_breaking', 'published_date', 'read_time', 'views_count', 'created_at']
 
+    def get_featured_image(self, obj):
+        request = self.context.get('request')
+        if obj.featured_image:
+            url = str(obj.featured_image)
+            if url.startswith('http'):
+                return url
+            if request:
+                return request.build_absolute_uri(obj.featured_image.url)
+            return obj.featured_image.url
+        return None
+
 
 class ArticleDetailSerializer(serializers.ModelSerializer):
     author = AuthorSerializer(read_only=True)
     category = CategorySerializer(read_only=True)
+    featured_image = serializers.SerializerMethodField()
     tags = TagListSerializerField()
-    
+
     class Meta:
         model = Article
         fields = ['id', 'title', 'slug', 'excerpt', 'content', 'featured_image', 'author', 'category', 'tags',
                  'is_featured', 'is_breaking', 'published_date', 'read_time', 'views_count', 
                  'meta_title', 'meta_description', 'created_at', 'updated_at']
+
+    def get_featured_image(self, obj):
+        request = self.context.get('request')
+        if obj.featured_image:
+            url = str(obj.featured_image)
+            if url.startswith('http'):
+                return url
+            if request:
+                return request.build_absolute_uri(obj.featured_image.url)
+            return obj.featured_image.url
+        return None
 
 
 class NewsletterSerializer(serializers.ModelSerializer):

@@ -24,6 +24,11 @@ class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
     pagination_class = CustomPagination
     lookup_field = 'slug'
     
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
+    
     @action(detail=True, methods=['get'])
     def articles(self, request, slug=None):
         category = self.get_object()
@@ -48,6 +53,11 @@ class AuthorViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = AuthorSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
     pagination_class = CustomPagination
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
     
     @action(detail=True, methods=['get'])
     def articles(self, request, pk=None):
@@ -78,6 +88,11 @@ class ArticleViewSet(viewsets.ReadOnlyModelViewSet):
     ordering_fields = ['published_date', 'created_at', 'views_count', 'title']
     ordering = ['-published_date']
     lookup_field = 'slug'
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
     
     def get_serializer_class(self):
         if self.action == 'retrieve':

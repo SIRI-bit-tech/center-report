@@ -7,7 +7,7 @@ from ckeditor.fields import RichTextField
 from cloudinary.models import CloudinaryField
 from django.conf import settings
 
-CLOUDINARY_BASE_URL = 'https://res.cloudinary.com/your-cloud-name/'  # Replace with your real cloud name
+CLOUDINARY_BASE_URL = 'https://res.cloudinary.com/djytturna/'
 
 def ensure_full_cloudinary_url(url):
     if not url:
@@ -71,12 +71,6 @@ class Author(models.Model):
     def article_count(self):
         return self.articles.filter(status='published').count()
 
-    def save(self, *args, **kwargs):
-        # Ensure avatar is a full URL
-        if self.avatar:
-            self.avatar = ensure_full_cloudinary_url(str(self.avatar))
-        super().save(*args, **kwargs)
-
 class Article(models.Model):
     STATUS_CHOICES = [
         ('draft', 'Draft'),
@@ -121,9 +115,6 @@ class Article(models.Model):
             self.meta_title = self.title[:60]
         if not self.meta_description:
             self.meta_description = self.excerpt[:160]
-        # Ensure featured_image is a full URL
-        if self.featured_image:
-            self.featured_image = ensure_full_cloudinary_url(str(self.featured_image))
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
