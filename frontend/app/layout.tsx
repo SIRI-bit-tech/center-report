@@ -1,6 +1,15 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
+import * as Sentry from "@sentry/nextjs";
+
+
+Sentry.init({
+  dsn: process.env.NEXT_PUBLIC_GLITCHTIP_DSN,
+  environment: process.env.NEXT_PUBLIC_ENVIRONMENT || 'development',
+  tracesSampleRate: 0.1,
+  integrations: [],
+})
 
 const inter = Inter({ 
   subsets: ['latin'],

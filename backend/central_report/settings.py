@@ -6,12 +6,23 @@ Django settings for central_report project.
 import os
 from pathlib import Path
 import environ
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Initialise environment variables
 env = environ.Env()
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+# Glitchtip Configuration
+sentry_sdk.init(
+    dsn=env('GLITCHTIP_DSN', default=''),
+    integrations=[DjangoIntegration()],
+    traces_sample_rate=env.float('SENTRY_TRACES_SAMPLE_RATE', default=1.0),
+    send_default_pii=True,
+    environment=env('ENVIRONMENT', default='development'),
+)
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SECRET_KEY', default='django-insecure-change-this-in-production')
