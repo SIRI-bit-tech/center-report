@@ -37,6 +37,7 @@ class ArticleListSerializer(serializers.ModelSerializer):
     author = AuthorSerializer(read_only=True)
     category = CategorySerializer(read_only=True)
     featured_image = serializers.SerializerMethodField()
+    published_date = serializers.SerializerMethodField()
     tags = TagListSerializerField()
 
     class Meta:
@@ -55,11 +56,16 @@ class ArticleListSerializer(serializers.ModelSerializer):
             return obj.featured_image.url
         return None
 
+    def get_published_date(self, obj):
+        # Return published_date if set, otherwise return created_at
+        return obj.published_date or obj.created_at
+
 
 class ArticleDetailSerializer(serializers.ModelSerializer):
     author = AuthorSerializer(read_only=True)
     category = CategorySerializer(read_only=True)
     featured_image = serializers.SerializerMethodField()
+    published_date = serializers.SerializerMethodField()
     tags = TagListSerializerField()
 
     class Meta:
@@ -78,6 +84,10 @@ class ArticleDetailSerializer(serializers.ModelSerializer):
                 return request.build_absolute_uri(obj.featured_image.url)
             return obj.featured_image.url
         return None
+
+    def get_published_date(self, obj):
+        # Return published_date if set, otherwise return created_at
+        return obj.published_date or obj.created_at
 
 
 class NewsletterSerializer(serializers.ModelSerializer):

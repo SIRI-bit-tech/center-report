@@ -117,6 +117,12 @@ class Article(models.Model):
             self.meta_title = self.title[:60]
         if not self.meta_description:
             self.meta_description = self.excerpt[:160]
+        
+        # Auto-set published_date when status is published and published_date is not set
+        if self.status == 'published' and not self.published_date:
+            from django.utils import timezone
+            self.published_date = timezone.now()
+        
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):

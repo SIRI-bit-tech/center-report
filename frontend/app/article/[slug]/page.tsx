@@ -100,7 +100,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                     </div>
                     <div className="flex items-center space-x-2">
                       <Calendar className="w-4 h-4" />
-                      <span>{new Date(article.published_at).toLocaleDateString()}</span>
+                      <span>{new Date(article.published_date).toLocaleDateString()}</span>
                     </div>
                     <div className="flex items-center space-x-2">
                       <Clock className="w-4 h-4" />

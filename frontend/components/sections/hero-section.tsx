@@ -1,9 +1,9 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowRight, TrendingUp } from 'lucide-react'
 import { Article } from '@/types'
 import { formatTimeAgo, truncateText } from '@/lib/utils'
@@ -17,6 +17,69 @@ function getValidImageUrl(url?: string) {
   if (!url) return '/placeholder.jpg'
   if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('/')) return url
   return '/placeholder.jpg'
+}
+
+// Animated Breaking News Ticker Component
+function BreakingNewsTicker({ breakingNews }: { breakingNews: Article[] }) {
+  const [currentIndex, setCurrentIndex] = useState(0)
+
+  useEffect(() => {
+    if (breakingNews.length <= 1) return
+
+    const interval = setInterval(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % breakingNews.length)
+    }, 4000) // Change headline every 4 seconds
+
+    return () => clearInterval(interval)
+  }, [breakingNews.length])
+
+  if (!breakingNews || breakingNews.length === 0) return null
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="mb-6"
+    >
+      <div className="bg-accent text-white px-4 py-3 rounded-lg flex items-center space-x-3">
+        <TrendingUp className="h-5 w-5 animate-pulse" />
+        <span className="font-semibold text-sm uppercase tracking-wider">Breaking News</span>
+        <div className="flex-1 overflow-hidden">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentIndex}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5, ease: "easeInOut" }}
+              className="flex items-center"
+            >
+              <Link
+                href={`/article/${breakingNews[currentIndex].slug}`}
+                className="text-sm hover:underline truncate flex-1"
+              >
+                {breakingNews[currentIndex].title}
+              </Link>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+        
+        {/* Progress indicators */}
+        {breakingNews.length > 1 && (
+          <div className="flex space-x-1">
+            {breakingNews.map((_, index) => (
+              <div
+                key={index}
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  index === currentIndex ? 'bg-white' : 'bg-white/30'
+                }`}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </motion.div>
+  )
 }
 
 export function HeroSection({ featuredArticles, breakingNews }: HeroSectionProps) {
@@ -37,35 +100,11 @@ export function HeroSection({ featuredArticles, breakingNews }: HeroSectionProps
   return (
     <section className="py-8 bg-gradient-to-b from-background-50 to-background">
       <div className="container-custom">
-        {/* Breaking News Ticker */}
-        {breakingNews && breakingNews.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-6"
-          >
-            <div className="bg-accent text-white px-4 py-3 rounded-lg flex items-center space-x-3">
-              <TrendingUp className="h-5 w-5 animate-pulse" />
-              <span className="font-semibold text-sm uppercase tracking-wider">Breaking News</span>
-              <div className="flex-1 overflow-hidden">
-                <div className="flex space-x-8 animate-scroll">
-                  {breakingNews.map((article, index) => (
-                    <Link
-                      key={article.id}
-                      href={`/article/${article.slug}`}
-                      className="text-sm hover:underline whitespace-nowrap"
-                    >
-                      {article.title}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        )}
+        {/* Animated Breaking News Ticker */}
+        <BreakingNewsTicker breakingNews={breakingNews || []} />
 
         {/* Hero Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Featured Article */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -88,7 +127,7 @@ export function HeroSection({ featuredArticles, breakingNews }: HeroSectionProps
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                 
                 {/* Content */}
-                <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                <div className="absolute bottom-0 left-0 right-0 p-6">
                   {/* Category Badge */}
                   <div className="mb-3">
                     <span 

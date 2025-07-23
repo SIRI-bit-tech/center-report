@@ -14,9 +14,17 @@ export function formatDate(date: string | Date): string {
   })
 }
 
-export function formatTimeAgo(date: string | Date): string {
+export function formatTimeAgo(date: string | Date | null | undefined): string {
+  if (!date) return 'Recently'
+  
   const now = new Date()
   const past = new Date(date)
+  
+  // Check if the date is valid
+  if (isNaN(past.getTime())) {
+    return 'Recently'
+  }
+  
   const diffInSeconds = Math.floor((now.getTime() - past.getTime()) / 1000)
 
   if (diffInSeconds < 60) return 'Just now'

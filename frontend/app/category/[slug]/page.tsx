@@ -27,7 +27,7 @@ async function getCategory(slug: string) {
 
 async function getCategoryArticles(categorySlug: string, page: number = 1) {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'}/articles/?category=${categorySlug}&page=${page}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'}/articles/?category__slug=${categorySlug}&page=${page}`, {
       next: { revalidate: 300 }
     })
     

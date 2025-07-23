@@ -80,10 +80,16 @@ class ArticleAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         return super().get_queryset(request).select_related('author', 'category')
     
-    actions = ['make_published', 'make_draft', 'make_featured', 'remove_featured']
+    actions = ['make_published', 'make_draft', 'make_featured', 'remove_featured', 'fix_published_dates']
     
     def make_published(self, request, queryset):
-        queryset.update(status='published')
+        from django.utils import timezone
+        now = timezone.now()
+        for article in queryset:
+            if not article.published_date:
+                article.published_date = now
+            article.status = 'published'
+            article.save()
     make_published.short_description = "Mark selected articles as published"
     
     def make_draft(self, request, queryset):
@@ -97,6 +103,23 @@ class ArticleAdmin(admin.ModelAdmin):
     def remove_featured(self, request, queryset):
         queryset.update(is_featured=False)
     remove_featured.short_description = "Remove featured status from selected articles"
+    
+    def fix_published_dates(self, request, queryset):
+        from django.utils import timezone
+        fixed_count = 0
+        for article in queryset:
+            if article.status == 'published' and not article.published_date:
+                article.published_date = article.created_at or timezone.now()
+                article.save()
+                fixed_count += 1
+        self.message_user(request, f"Fixed published_date for {fixed_count} articles.")
+    fix_published_dates.short_description = "Fix published_date for published articles"
+
+    def save_model(self, request, obj, form, change):
+        if obj.status == 'published' and not obj.published_date:
+            from django.utils import timezone
+            obj.published_date = timezone.now()
+        super().save_model(request, obj, form, change)
 
 
 @admin.register(Newsletter)
