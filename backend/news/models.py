@@ -54,6 +54,8 @@ class Author(models.Model):
     avatar = CloudinaryField('avatar', blank=True, null=True)
     email = models.EmailField()
     twitter_handle = models.CharField(max_length=50, blank=True)
+    linkedin_url = models.URLField(blank=True)
+    website = models.URLField(blank=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
