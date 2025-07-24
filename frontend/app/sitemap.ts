@@ -55,45 +55,68 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     // Add articles
     if (articlesRes.status === 'fulfilled' && articlesRes.value.ok) {
-      const articlesData = await articlesRes.value.json()
-      const articles = articlesData.results || []
-      
-      articles.forEach((article: any) => {
-        dynamicPages.push({
-          url: `${baseUrl}/article/${article.slug}`,
-          lastModified: new Date(article.published_date || article.created_at),
-          changeFrequency: 'weekly' as const,
-          priority: 0.9,
+      try {
+        const articlesData = await articlesRes.value.json()
+        const articles = Array.isArray(articlesData.results) ? articlesData.results : 
+                        Array.isArray(articlesData) ? articlesData : []
+        
+        articles.forEach((article: any) => {
+          if (article && article.slug) {
+            dynamicPages.push({
+              url: `${baseUrl}/article/${article.slug}`,
+              lastModified: new Date(article.published_date || article.created_at || Date.now()),
+              changeFrequency: 'weekly' as const,
+              priority: 0.9,
+            })
+          }
         })
-      })
+      } catch (error) {
+        console.error('Error processing articles for sitemap:', error)
+      }
     }
 
     // Add categories
     if (categoriesRes.status === 'fulfilled' && categoriesRes.value.ok) {
-      const categories = await categoriesRes.value.json()
-      
-      categories.forEach((category: any) => {
-        dynamicPages.push({
-          url: `${baseUrl}/category/${category.slug}`,
-          lastModified: new Date(),
-          changeFrequency: 'daily' as const,
-          priority: 0.8,
+      try {
+        const categoriesData = await categoriesRes.value.json()
+        const categories = Array.isArray(categoriesData.results) ? categoriesData.results : 
+                          Array.isArray(categoriesData) ? categoriesData : []
+        
+        categories.forEach((category: any) => {
+          if (category && category.slug) {
+            dynamicPages.push({
+              url: `${baseUrl}/category/${category.slug}`,
+              lastModified: new Date(),
+              changeFrequency: 'daily' as const,
+              priority: 0.8,
+            })
+          }
         })
-      })
+      } catch (error) {
+        console.error('Error processing categories for sitemap:', error)
+      }
     }
 
     // Add authors
     if (authorsRes.status === 'fulfilled' && authorsRes.value.ok) {
-      const authors = await authorsRes.value.json()
-      
-      authors.forEach((author: any) => {
-        dynamicPages.push({
-          url: `${baseUrl}/author/${author.slug}`,
-          lastModified: new Date(),
-          changeFrequency: 'weekly' as const,
-          priority: 0.7,
+      try {
+        const authorsData = await authorsRes.value.json()
+        const authors = Array.isArray(authorsData.results) ? authorsData.results : 
+                       Array.isArray(authorsData) ? authorsData : []
+        
+        authors.forEach((author: any) => {
+          if (author && author.slug) {
+            dynamicPages.push({
+              url: `${baseUrl}/author/${author.slug}`,
+              lastModified: new Date(),
+              changeFrequency: 'weekly' as const,
+              priority: 0.7,
+            })
+          }
         })
-      })
+      } catch (error) {
+        console.error('Error processing authors for sitemap:', error)
+      }
     }
 
     return [...staticPages, ...dynamicPages]

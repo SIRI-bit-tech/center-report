@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import * as Sentry from "@sentry/nextjs";
+import { Analytics } from "@vercel/analytics/next"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 
 Sentry.init({
@@ -122,6 +124,8 @@ export default function RootLayout({
       </head>
       <body className={`${inter.className} min-h-screen bg-background`}>
         {children}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   )
