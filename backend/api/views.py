@@ -47,9 +47,7 @@ class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class AuthorViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Author.objects.filter(is_active=True).annotate(
-        article_count=Count('articles', filter=Q(articles__status='published'))
-    )
+    queryset = Author.objects.filter(is_active=True)
     serializer_class = AuthorSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
     pagination_class = CustomPagination
