@@ -4,6 +4,7 @@ services:
     runtime: docker
     plan: free
     region: oregon
+    rootDir: backend
     envVars:
       - key: DEBUG
         value: "False"
