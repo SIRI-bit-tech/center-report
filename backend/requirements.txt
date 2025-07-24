@@ -4,7 +4,6 @@ django-cors-headers
 django-filter
 Pillow
 psycopg2-binary
-python-decoupl
 django-cloudinary-storage
 cloudinary
 django-taggit
