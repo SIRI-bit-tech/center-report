@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: central-report-backend
+    runtime: docker
+    plan: free
+    region: oregon
+    envVars:
+      - key: DEBUG
+        value: "False"
+      - key: ENVIRONMENT
+        value: production
+      - key: DJANGO_SETTINGS_MODULE
+        value: central_report.settings
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALLOWED_HOSTS
+        value: .onrender.com
+      - key: DJANGO_SUPERUSER_USERNAME
+        value: admin
+      - key: DJANGO_SUPERUSER_EMAIL
+        value: admin@centralreport.com
+      - key: DJANGO_SUPERUSER_PASSWORD
+        sync: false
+    healthCheckPath: /api/
+    autoDeploy: true
+
+databases:
+  - name: central-report-db
+    databaseName: central_report_db
+    user: central_report_user
+    plan: free
+    region: oregon 
