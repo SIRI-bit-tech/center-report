@@ -46,4 +46,43 @@ export const Adsense: React.FC<AdsenseProps> = ({
       />
     </div>
   );
+};
+
+// Multiplex Ad Component
+interface MultiplexAdProps {
+  slot: string;
+  style?: React.CSSProperties;
+  className?: string;
+  client?: string;
+}
+
+export const MultiplexAd: React.FC<MultiplexAdProps> = ({
+  slot,
+  style = { display: "inline-block", width: "500px", height: "400px" },
+  className = "",
+  client = "ca-pub-3032394425172826",
+}) => {
+  const adRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && (window as any).adsbygoogle && adRef.current) {
+      try {
+        (window as any).adsbygoogle.push({});
+      } catch (e) {
+        // Ignore duplicate ad push errors
+      }
+    }
+  }, []);
+
+  return (
+    <div className={className}>
+      <ins
+        className="adsbygoogle"
+        style={style}
+        data-ad-client={client}
+        data-ad-slot={slot}
+        ref={adRef as any}
+      />
+    </div>
+  );
 }; 

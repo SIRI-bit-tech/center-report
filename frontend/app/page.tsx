@@ -3,6 +3,7 @@ import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { HeroSection } from '@/components/sections/hero-section'
 import { ArticleCard } from '@/components/articles/article-card'
+import { Adsense, MultiplexAd } from '@/components/ui/adsense'
 import { Article, Category } from '@/types'
 
 async function getHomepageData() {
@@ -100,6 +101,23 @@ export default async function HomePage() {
                       />
                     ))}
                   </div>
+                </div>
+
+                {/* Homepage Ad */}
+                <div className="mb-12">
+                  <Adsense
+                    slot="7322493148"
+                    style={{ display: 'block', textAlign: 'center', minHeight: 250 }}
+                    format="auto"
+                  />
+                </div>
+
+                {/* Multiplex Ad */}
+                <div className="mb-12 flex justify-center">
+                  <MultiplexAd
+                    slot="5168152845"
+                    style={{ display: 'inline-block', width: '500px', height: '400px' }}
+                  />
                 </div>
 
                 {/* Category Sections */}
