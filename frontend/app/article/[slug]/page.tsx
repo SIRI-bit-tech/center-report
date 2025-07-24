@@ -5,6 +5,7 @@ import { Footer } from '@/components/layout/footer'
 import { ArticleCard } from '@/components/articles/article-card'
 import { Article } from '@/types'
 import { Calendar, Clock, User, Share2, Facebook, Twitter, Linkedin } from 'lucide-react'
+import { Adsense } from '@/components/ui/adsense'
 
 async function getArticle(slug: string) {
   try {
@@ -135,7 +136,29 @@ export default async function ArticlePage({ params }: { params: { slug: string }
 
               {/* Article Content */}
               <div className="prose prose-lg max-w-none mb-12">
-                <div dangerouslySetInnerHTML={{ __html: article.content }} />
+                {(() => {
+                  // Split content into paragraphs
+                  const paragraphs = article.content.split(/<\/p>/i)
+                  return (
+                    <>
+                      {paragraphs.slice(0, 2).map((p: string, i: number) => (
+                        <div key={i} dangerouslySetInnerHTML={{ __html: p + '</p>' }} />
+                      ))}
+                      {/* In-article Ad after 2nd paragraph */}
+                      <div className="my-8">
+                        <Adsense
+                          slot="7322493147"
+                          style={{ display: 'block', textAlign: 'center', minHeight: 120 }}
+                          format="fluid"
+                          layout="in-article"
+                        />
+                      </div>
+                      {paragraphs.slice(2).map((p: string, i: number) => (
+                        <div key={i + 2} dangerouslySetInnerHTML={{ __html: p + '</p>' }} />
+                      ))}
+                    </>
+                  )
+                })()}
               </div>
 
               {/* Article Footer */}

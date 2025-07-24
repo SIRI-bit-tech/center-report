@@ -4,6 +4,7 @@ import './globals.css'
 import * as Sentry from "@sentry/nextjs";
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { CookieConsent } from "@/components/ui/cookie-consent"
 
 
 Sentry.init({
@@ -89,6 +90,12 @@ export default function RootLayout({
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
+        {/* AdSense Script */}
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3032394425172826"
+          crossOrigin="anonymous"
+        ></script>
         
         {/* Apple Touch Icons */}
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png" />
@@ -126,6 +133,7 @@ export default function RootLayout({
         {children}
         <Analytics />
         <SpeedInsights />
+        <CookieConsent />
       </body>
     </html>
   )
