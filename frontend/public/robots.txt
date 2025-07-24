@@ -1,0 +1,25 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://thecentralreport.com/sitemap.xml
+
+# Disallow admin and API routes
+Disallow: /admin/
+Disallow: /api/
+Disallow: /_next/
+Disallow: /static/
+
+# Allow important pages
+Allow: /article/
+Allow: /category/
+Allow: /author/
+Allow: /tag/
+Allow: /search
+Allow: /about
+Allow: /contact
+Allow: /privacy
+Allow: /terms
+
+# Crawl delay (optional)
+Crawl-delay: 1 

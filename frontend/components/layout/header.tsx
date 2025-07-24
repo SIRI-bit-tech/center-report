@@ -49,11 +49,15 @@ export function Header() {
         {/* Main Header */}
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
-            <Newspaper className="h-8 w-8 text-accent" />
+          <Link href="/" className="flex items-center space-x-3">
+            <img 
+              src="/central_report_logo.png" 
+              alt="The Central Report" 
+              className="h-14 w-auto drop-shadow-lg filter brightness-110"
+            />
             <div className="flex flex-col">
               <span className="text-xl font-bold text-primary">The Central Report</span>
-              <span className="text-xs text-gray-500 uppercase tracking-wider">Professional News</span>
+              <span className="text-xs text-gray-500 uppercase tracking-wider">Your Trusted Source</span>
             </div>
           </Link>
 
