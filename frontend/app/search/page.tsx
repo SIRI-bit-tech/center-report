@@ -50,7 +50,8 @@ function SearchContent() {
 
       setLoading(true)
       try {
-        let url = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'}/articles/?search=${encodeURIComponent(query)}&page=${page}`
+        // Use the dedicated search endpoint
+        let url = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'}/search/?q=${encodeURIComponent(query)}&page=${page}`
         
         if (category) {
           url += `&category=${category}`
@@ -63,6 +64,7 @@ function SearchContent() {
           setTotalCount(data.count || 0)
           setTotalPages(Math.ceil((data.count || 0) / 12))
         } else {
+          console.error('Search API error:', response.status, response.statusText)
           setArticles([])
           setTotalCount(0)
           setTotalPages(0)
@@ -166,7 +168,7 @@ function SearchContent() {
           {loading ? (
             <div className="text-center py-12">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent mx-auto"></div>
-              <p className="mt-4 text-gray-600">Searching...</p>
+              <p className="mt-4 text-gray-600">Searching for "{query}"...</p>
             </div>
           ) : query ? (
             <>
@@ -174,7 +176,7 @@ function SearchContent() {
                 <>
                   <div className="mb-6">
                     <p className="text-gray-600">
-                      Found {totalCount} result{totalCount !== 1 ? 's' : ''}
+                      Found {totalCount} result{totalCount !== 1 ? 's' : ''} for "{query}"
                     </p>
                   </div>
                   
@@ -225,12 +227,35 @@ function SearchContent() {
                 </>
               ) : (
                 <div className="text-center py-12">
-                  <h3 className="text-xl font-semibold text-gray-600 mb-2">
-                    No results found
-                  </h3>
-                  <p className="text-gray-500">
-                    Try adjusting your search terms or browse our categories.
-                  </p>
+                  <div className="max-w-md mx-auto">
+                    <h3 className="text-xl font-semibold text-gray-600 mb-4">
+                      No articles found for "{query}"
+                    </h3>
+                    <p className="text-gray-500 mb-6">
+                      The content you're looking for hasn't been published yet or try different keywords.
+                    </p>
+                    <div className="bg-gray-50 rounded-lg p-6">
+                      <p className="text-sm font-medium text-gray-600 mb-3">Try these suggestions:</p>
+                      <ul className="text-sm text-gray-500 space-y-2 text-left">
+                        <li className="flex items-center">
+                          <span className="w-2 h-2 bg-accent rounded-full mr-3"></span>
+                          Check your spelling
+                        </li>
+                        <li className="flex items-center">
+                          <span className="w-2 h-2 bg-accent rounded-full mr-3"></span>
+                          Try more general keywords
+                        </li>
+                        <li className="flex items-center">
+                          <span className="w-2 h-2 bg-accent rounded-full mr-3"></span>
+                          Use fewer words
+                        </li>
+                        <li className="flex items-center">
+                          <span className="w-2 h-2 bg-accent rounded-full mr-3"></span>
+                          Browse our categories below
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
                 </div>
               )}
             </>
