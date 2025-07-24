@@ -92,11 +92,11 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                   {article.excerpt}
                 </p>
                 
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-6 text-sm text-gray-500">
+                <div className="flex flex-wrap items-center justify-between min-w-0">
+                  <div className="flex items-center space-x-6 text-sm text-gray-500 min-w-0">
                     <div className="flex items-center space-x-2">
                       <User className="w-4 h-4" />
-                      <span>{article.author.name}</span>
+                      <span className="truncate">{article.author.name}</span>
                     </div>
                     <div className="flex items-center space-x-2">
                       <Calendar className="w-4 h-4" />
@@ -107,9 +107,8 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                       <span>{article.read_time} min read</span>
                     </div>
                   </div>
-                  
-                  <div className="flex items-center space-x-2">
-                    <span className="text-sm text-gray-500">Share:</span>
+                  <div className="flex flex-wrap items-center space-x-2 overflow-x-auto max-w-full">
+                    <span className="text-sm text-gray-500 whitespace-nowrap">Share:</span>
                     <button className="p-2 text-gray-400 hover:text-blue-600 transition-colors">
                       <Facebook className="w-4 h-4" />
                     </button>
