@@ -46,7 +46,11 @@ export function Footer() {
             {/* Brand Section */}
             <div className="lg:col-span-1">
               <Link href="/" className="flex items-center space-x-2 mb-4">
-                <Newspaper className="h-8 w-8 text-accent" />
+                <img
+                  src="/central_report_logo.png"
+                  alt="The Central Report Logo"
+                  className="h-10 w-auto rounded shadow"
+                />
                 <div>
                   <span className="text-xl font-bold">The Central Report</span>
                   <p className="text-sm text-gray-300">Professional News</p>
