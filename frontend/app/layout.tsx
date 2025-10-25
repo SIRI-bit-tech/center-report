@@ -35,15 +35,15 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://thecentralreport.com'),
+  metadataBase: new URL('https://centralsreport.com'),
   alternates: {
     canonical: '/',
   },
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://thecentralreport.com',
-    title: 'The Central Report - Your Trusted Source',
+    url: 'https://centralsreport.com',
+    title: 'Central Report - Your Trusted Source',
     description: 'Stay informed with the latest breaking news, politics, business, technology, and more from The Central Report.',
     siteName: 'The Central Report',
     images: [
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'The Central Report - Your Trusted Source',
+    title: 'Central Report - Your Trusted Source',
     description: 'Stay informed with the latest breaking news, politics, business, technology, and more from The Central Report.',
     images: ['/og-image.jpg'],
     creator: '@centralreport',
@@ -75,8 +75,6 @@ export const metadata: Metadata = {
   },
   verification: {
     google: process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION || 'your-google-verification-code',
-    yandex: process.env.NEXT_PUBLIC_YANDEX_VERIFICATION,
-    bing: process.env.NEXT_PUBLIC_BING_VERIFICATION,
   },
 }
 
@@ -137,16 +135,16 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "NewsMediaOrganization",
               "name": "The Central Report",
-              "url": "https://thecentralreport.com",
+              "url": "https://centralsreport.com",
               "logo": {
                 "@type": "ImageObject",
-                "url": "https://thecentralreport.com/logo.png",
+                "url": "https://centralsreport.com/logo.png",
                 "width": 600,
                 "height": 60
               },
               "sameAs": [
-                "https://twitter.com/centralreport",
-                "https://facebook.com/centralreport"
+                "https://twitter.com/centralsreport",
+                "https://facebook.com/centralsreport"
               ],
               "description": "Stay informed with the latest breaking news, politics, business, technology, and more from The Central Report.",
               "foundingDate": "2024",
