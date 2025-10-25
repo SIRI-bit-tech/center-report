@@ -20,9 +20,9 @@ interface ArticleStructuredDataProps {
 }
 
 export function ArticleStructuredData({ article }: ArticleStructuredDataProps) {
-  const baseUrl = 'https://thecentralreport.com'
+  const baseUrl = 'https://centralsreport.com'
   
-  const structuredData = {
+  const structuredData: any = {
     "@context": "https://schema.org",
     "@type": "NewsArticle",
     "headline": article.title,
@@ -57,7 +57,7 @@ export function ArticleStructuredData({ article }: ArticleStructuredDataProps) {
   }
 
   if (article.featured_image) {
-    structuredData["image"] = {
+    structuredData.image = {
       "@type": "ImageObject",
       "url": article.featured_image,
       "width": 1200,
