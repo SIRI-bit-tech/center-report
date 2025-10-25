@@ -5,6 +5,7 @@ import * as Sentry from "@sentry/nextjs";
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { CookieConsent } from "@/components/ui/cookie-consent"
+import { GoogleAnalytics } from "@/components/seo/google-analytics"
 
 
 Sentry.init({
@@ -73,7 +74,9 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: 'your-google-verification-code',
+    google: process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION || 'your-google-verification-code',
+    yandex: process.env.NEXT_PUBLIC_YANDEX_VERIFICATION,
+    bing: process.env.NEXT_PUBLIC_BING_VERIFICATION,
   },
 }
 
@@ -125,11 +128,46 @@ export default function RootLayout({
         {/* Theme Color */}
         <meta name="theme-color" content="#222222" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        
+        {/* Structured Data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "NewsMediaOrganization",
+              "name": "The Central Report",
+              "url": "https://thecentralreport.com",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://thecentralreport.com/logo.png",
+                "width": 600,
+                "height": 60
+              },
+              "sameAs": [
+                "https://twitter.com/centralreport",
+                "https://facebook.com/centralreport"
+              ],
+              "description": "Stay informed with the latest breaking news, politics, business, technology, and more from The Central Report.",
+              "foundingDate": "2024",
+              "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "US"
+              },
+              "contactPoint": {
+                "@type": "ContactPoint",
+                "contactType": "editorial",
+                "url": "https://thecentralreport.com/contact"
+              }
+            })
+          }}
+        />
       </head>
       <body className={`${inter.className} min-h-screen bg-background`}>
         {children}
         <Analytics />
         <SpeedInsights />
+        <GoogleAnalytics />
         <CookieConsent />
       </body>
     </html>

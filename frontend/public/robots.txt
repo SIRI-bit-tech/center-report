@@ -9,6 +9,12 @@ Disallow: /admin/
 Disallow: /api/
 Disallow: /_next/
 Disallow: /static/
+Disallow: /.well-known/
+Disallow: /node_modules/
+Disallow: /*.json$
+Disallow: /*?*utm_*
+Disallow: /*?*fbclid*
+Disallow: /*?*gclid*
 
 # Allow important pages
 Allow: /article/
@@ -20,6 +26,30 @@ Allow: /about
 Allow: /contact
 Allow: /privacy
 Allow: /terms
+Allow: /careers
 
-# Crawl delay (optional)
+# Special rules for search engines
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Slurp
+Allow: /
+Crawl-delay: 2
+
+# Block bad bots
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+# Crawl delay for general bots
 Crawl-delay: 1 
