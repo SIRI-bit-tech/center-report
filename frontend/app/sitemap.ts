@@ -43,12 +43,31 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ]
 
+  // Skip API calls during build time if API is not available
+  if (process.env.NODE_ENV === 'production' && !process.env.NEXT_PUBLIC_API_URL) {
+    console.log('Skipping dynamic sitemap generation - API URL not configured for production')
+    return staticPages
+  }
+
   try {
-    // Fetch dynamic content from your API
+    // Create fetch with timeout
+    const fetchWithTimeout = (url: string, timeout = 10000) => {
+      return Promise.race([
+        fetch(url, { 
+          headers: { 'Accept': 'application/json' },
+          cache: 'no-store'
+        }),
+        new Promise<Response>((_, reject) =>
+          setTimeout(() => reject(new Error('Fetch timeout')), timeout)
+        )
+      ])
+    }
+
+    // Fetch dynamic content from your API with timeout
     const [articlesRes, categoriesRes, authorsRes] = await Promise.allSettled([
-      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'}/articles/?limit=1000`),
-      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'}/categories/`),
-      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'}/authors/`)
+      fetchWithTimeout(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'}/articles/?limit=1000`),
+      fetchWithTimeout(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'}/categories/`),
+      fetchWithTimeout(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'}/authors/`)
     ])
 
     const dynamicPages: MetadataRoute.Sitemap = []
