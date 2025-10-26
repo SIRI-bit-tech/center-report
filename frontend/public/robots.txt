@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://thecentralreport.com/sitemap.xml
+Sitemap: https://centralsreport.com/sitemap.xml
 
 # Disallow admin and API routes
 Disallow: /admin/

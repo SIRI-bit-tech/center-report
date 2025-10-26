@@ -155,7 +155,7 @@ export default function RootLayout({
               "contactPoint": {
                 "@type": "ContactPoint",
                 "contactType": "editorial",
-                "url": "https://thecentralreport.com/contact"
+                "url": "https://centralsreport.com/contact"
               }
             })
           }}
